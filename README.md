@@ -7,6 +7,8 @@ O objetivo desse projeto é criar uma central de integração com várias plataf
 
 O projeto *PaymentCenter* é a biblioteca de pagamentos propriamente dita. Já o projeto *PaymentSystem* é um projeto console para executar o anterior. Futuramente será implementado um projeto para testes unitários.
 
+Este arquivo é um resumo do que você pode encontrar aqui. Mais detalhes podem ser vistos em nossa Wiki.
+
 ## Estrutura organizacional básica
 A estrutura abaixo refere-se ao projeto "PaymentCenter".
 
