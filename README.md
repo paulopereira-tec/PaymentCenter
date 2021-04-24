@@ -5,6 +5,8 @@ Atualmente, está integrado com as seguintes plataformas:
 - Boletos do banco Bradesco.
 
 # Exemplo de utilização
+(Consulte a Wiki para mais informações)
+
 ## Criação dos personagens principais: pagador e recebedor
 
     /* PAGADOR */
