@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Paulo Pereira</Authors>
+    <PackageId>dotcreative.paymentcenter</PackageId>
+    <Company>Dot Creative Soluções em TI</Company>
+    <Description>Plataforma de integração com API de serviços de pagamento com o objetivo de servir como middleware entre a aplicação e as plataformas.</Description>
+    <Copyright>OpenSource</Copyright>
+    <PackageProjectUrl>https://github.com/paulopereira-tec/PaymentCenter</PackageProjectUrl>
+    <PackageReleaseNotes>Nesta versão:
+- integração com Bradesco</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dotcreative.x509" Version="1.0.0" />
+    <PackageReference Include="Flunt" Version="1.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Core\Helpers\" />
+  </ItemGroup>
+
+</Project>
