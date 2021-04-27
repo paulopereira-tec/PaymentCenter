@@ -10,7 +10,11 @@
     <Copyright>OpenSource</Copyright>
     <PackageProjectUrl>https://github.com/paulopereira-tec/PaymentCenter</PackageProjectUrl>
     <PackageReleaseNotes>Nesta versão:
-- integração com Bradesco</PackageReleaseNotes>
+- integração com Bradesco
+- correção do formato do CPF/CNPJ do pagador enviado ao banco</PackageReleaseNotes>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>

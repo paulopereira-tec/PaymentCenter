@@ -43,7 +43,7 @@ namespace PaymentCenter.Platforms.Bradesco
             dtEmissaoTitulo = bradesco.PaymentData.CreateDate.ToString("MM.dd.yyyy");
             dtVencimentoTitulo = bradesco.PaymentData.DueDate.ToString("MM.dd.yyyy");
 
-            vlNominalTitulo = bradesco.PaymentData.Value.ToString().Replace(@"/\.|\,/g", "");
+            vlNominalTitulo = Regex.Replace(bradesco.PaymentData.Value.ToString(), @"\.|,", "");
 
             string cpfOrCnpj = Regex.Replace(bradesco.Receiver.Document.DocumentSubscription, @"/|\.|-", "");
             nuCPFCNPJ = cpfOrCnpj.Substring(0, 8);
@@ -53,7 +53,7 @@ namespace PaymentCenter.Platforms.Bradesco
             // nome do pagador
             nomePagador = bradesco.Payer.Name.FullName;
             cdIndCpfcnpjPagador = bradesco.Payer.Personality == EPersonalitty.PF ? "1": "0";
-            nuCpfcnpjPagador = Regex.Replace(bradesco.Payer.Document.DocumentSubscription, @"/|\.|-", "");
+            nuCpfcnpjPagador = (bradesco.Payer.Personality == EPersonalitty.PF ? "000": "") + Regex.Replace(bradesco.Payer.Document.DocumentSubscription, @"/|\.|-", "");
             endEletronicoPagador = bradesco.Payer.Email;
 
             // endereço
