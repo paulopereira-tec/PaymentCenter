@@ -3,7 +3,7 @@ using PaymentCenter.Core.ValuesObject.Interfaces;
 
 namespace PaymentCenter.Core.ValuesObject
 {
-  public class DocumentPF : IDocument, IValidatable
+  public class DocumentPF : IDocument
   {
     public string DocumentSubscription { get; set; }
 

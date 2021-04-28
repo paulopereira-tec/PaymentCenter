@@ -3,7 +3,7 @@ using PaymentCenter.Core.Domain.Interface;
 
 namespace PaymentCenter.Core.Domain.Entities
 {
-  public class AccountData: Notifiable, IAccountData
+  public class AccountData: IAccountData
   {
     public string SecretKey { get; set; }
 

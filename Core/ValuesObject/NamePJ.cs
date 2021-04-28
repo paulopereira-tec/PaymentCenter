@@ -2,7 +2,7 @@
 
 namespace PaymentCenter.Core.ValuesObject
 {
-  public class NamePJ : Name, IValidatable
+  public class NamePJ : Name
   {
     public string Corportate { get; set; }
     public string Fantasy { get; set; }

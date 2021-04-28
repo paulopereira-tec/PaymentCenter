@@ -49,7 +49,7 @@ namespace PaymentCenter.Platforms.Bradesco
         /// - ""9 = Cobrança escritural,
         /// - ""5 = Cobrança de Seguros
         /// </summary>
-        public string IdProduto { get; private set; } = "";
+        public string IdProduto { get; private set; } = "09";
 
         /// <summary>
         /// Obrigatório. Número da Negociação ser utilizada. Número da Negociação Formato:
@@ -245,7 +245,7 @@ namespace PaymentCenter.Platforms.Bradesco
         /// <summary>
         /// Indica se o documento a ser passado será CPF (1) ou CNPJ (2)
         /// </summary>
-        public string CdIndCpfcnpjPagador { get; private set; } = "";
+        public string CdIndCpfcnpjPagador { get; private set; } = "1";
 
 
         public string NuCpfcnpjPagador { get; private set; } = "";

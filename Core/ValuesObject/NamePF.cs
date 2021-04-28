@@ -1,8 +1,6 @@
-﻿using Flunt.Validations;
-
-namespace PaymentCenter.Core.ValuesObject
+﻿namespace PaymentCenter.Core.ValuesObject
 {
-  public class NamePF : Name, IValidatable
+  public class NamePF : Name
   {
     public string First { get; set; }
     public string Last { get; set; }

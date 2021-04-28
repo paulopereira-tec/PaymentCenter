@@ -22,10 +22,9 @@ namespace PaymentCenter.Platforms.Bradesco
         /// <summary>
         /// Prepara o JSON a ser enviado para o banco. Já criptografa os dados no padrão PKCS#7 assinado com cetificado digital (e-CPF ou e-CNPJ)
         /// </summary>
-        /// <param name="bradesco"></param>
-        /// <param name="operationType"></param>
+        /// <param name="operationType">É o mesmo que "idProduto".</param>
         /// <param name="titleSpecie"></param>
-        /// <param name="IOF"></param>
+        /// <param name="IOF">Valor de imposto a ser pago.</param>
         /// <returns></returns>
         public static Bradesco Prepare(this Bradesco bradesco, string operationType, string titleSpecie, string IOF)
         {
@@ -43,7 +42,11 @@ namespace PaymentCenter.Platforms.Bradesco
             dtEmissaoTitulo = bradesco.PaymentData.CreateDate.ToString("MM.dd.yyyy");
             dtVencimentoTitulo = bradesco.PaymentData.DueDate.ToString("MM.dd.yyyy");
 
-            vlNominalTitulo = Regex.Replace(bradesco.PaymentData.Value.ToString(), @"\.|,", "");
+            // Se o valor informado não tiver mais de 17, completa à direita com zeros
+            string fillValue = "";
+            string value = Regex.Replace(bradesco.PaymentData.Value.ToString(), @"\.|,", "");
+            for (int i = 0; i < (17 - value.Length); i++) fillValue += "0";
+            vlNominalTitulo = "" + value;
 
             string cpfOrCnpj = Regex.Replace(bradesco.Receiver.Document.DocumentSubscription, @"/|\.|-", "");
             nuCPFCNPJ = cpfOrCnpj.Substring(0, 8);
@@ -52,7 +55,7 @@ namespace PaymentCenter.Platforms.Bradesco
 
             // nome do pagador
             nomePagador = bradesco.Payer.Name.FullName;
-            cdIndCpfcnpjPagador = bradesco.Payer.Personality == EPersonalitty.PF ? "1": "0";
+            cdIndCpfcnpjPagador = bradesco.Payer.Personality == EPersonalitty.PF ? "1": "2";
             nuCpfcnpjPagador = (bradesco.Payer.Personality == EPersonalitty.PF ? "000": "") + Regex.Replace(bradesco.Payer.Document.DocumentSubscription, @"/|\.|-", "");
             endEletronicoPagador = bradesco.Payer.Email;
 

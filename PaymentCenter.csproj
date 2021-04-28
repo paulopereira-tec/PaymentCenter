@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -9,12 +9,14 @@
     <Description>Plataforma de integração com API de serviços de pagamento com o objetivo de servir como middleware entre a aplicação e as plataformas.</Description>
     <Copyright>OpenSource</Copyright>
     <PackageProjectUrl>https://github.com/paulopereira-tec/PaymentCenter</PackageProjectUrl>
-    <PackageReleaseNotes>Nesta versão:
-- integração com Bradesco
-- correção do formato do CPF/CNPJ do pagador enviado ao banco</PackageReleaseNotes>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
-    <Version>1.0.3</Version>
+    <PackageReleaseNotes>
+      Nesta versão:
+      - integração com Bradesco
+      - correção do campo cdIndCpfcnpjPagador - Bradesco boletos
+    </PackageReleaseNotes>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
+    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +25,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <Folder Include="Core\Helpers\" />
   </ItemGroup>
