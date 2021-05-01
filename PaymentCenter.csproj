@@ -20,14 +20,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Core\Helpers\**" />
+    <EmbeddedResource Remove="Core\Helpers\**" />
+    <None Remove="Core\Helpers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="dotcreative.x509" Version="1.0.0" />
     <PackageReference Include="Flunt" Version="1.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Core\Helpers\" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

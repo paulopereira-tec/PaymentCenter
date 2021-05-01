@@ -2,6 +2,7 @@
 using Flunt.Validations;
 using PaymentCenter.Core.Enums;
 using PaymentCenter.Core.ValuesObject.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace PaymentCenter.Core.ValuesObject
 {
@@ -30,6 +31,11 @@ namespace PaymentCenter.Core.ValuesObject
       Type = type;
 
       Validate();
+    }
+
+    public string PureZipcode()
+    {
+      return Regex.Replace(Zipcode, @"-|\.", "");
     }
 
     public override string ToString()

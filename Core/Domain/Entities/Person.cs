@@ -24,6 +24,7 @@ namespace PaymentCenter.Core.Domain.Entities
       Addresses.Add(address);
       Document = document;
       Email = email;
+      Personality = (document.PureDocument().Length == 11) ? EPersonalitty.PF: EPersonalitty.PJ;
     }
 
     public Person(IName name, Address address, string email)

@@ -12,5 +12,11 @@ namespace PaymentCenter.Core.ValuesObject.Interfaces
     string State { get; set; }
     string Zipcode { get; set; }
     string Complement { get; set; }
+
+    /// <summary>
+    /// Retorna o CEP sem pontos ou traços.
+    /// </summary>
+    /// <returns>CEP puro sem pontos ou traços.</returns>
+    string PureZipcode();
   }
 }

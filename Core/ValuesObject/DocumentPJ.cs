@@ -1,15 +1,12 @@
-﻿using Flunt.Validations;
-using PaymentCenter.Core.ValuesObject.Interfaces;
+﻿using PaymentCenter.Core.ValuesObject.Interfaces;
 
 namespace PaymentCenter.Core.ValuesObject
 {
-  public class DocumentPJ : IDocument
+  public sealed class DocumentPJ : Document, IDocument
   {
     public string DocumentSubscription { get; set; }
 
-    public DocumentPJ(string document) {
-      DocumentSubscription = document;
-
+    public DocumentPJ(string document): base(document) {
       Validate();
     }
 

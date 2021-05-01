@@ -3,5 +3,7 @@
   public interface IDocument
   {
     string DocumentSubscription { get; set; }
+
+    string PureDocument();
   }
 }

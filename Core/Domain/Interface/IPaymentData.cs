@@ -8,5 +8,6 @@ namespace PaymentCenter.Core.Domain.Interface
     decimal Value { get; set; }
     DateTime CreateDate { get; set; }
     DateTime DueDate { get; set; }
+    int NumberOfPayment { get; set; }
   }
 }
