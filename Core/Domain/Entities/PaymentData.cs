@@ -11,6 +11,14 @@ namespace PaymentCenter.Core.Domain.Entities
     public DateTime DueDate { get; set; }
     public int NumberOfPayment { get; set; }
 
+    public PaymentData(string description, decimal value, DateTime createDate, DateTime dueDate)
+    {
+      Description = description;
+      Value = value;
+      CreateDate = createDate;
+      DueDate = dueDate;
+    }
+
     public PaymentData(string description, decimal value, DateTime createDate, DateTime dueDate, int numberOfPayment)
     {
       Description = description;
