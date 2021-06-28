@@ -15,7 +15,7 @@ namespace PaymentCenter.Platforms.Bradesco
     private static string JsonData { get; set; }
     private static string EncryptedData { get; set; }
 
-    public static string GetJsonData(this Bradesco bradesco)
+    public static string GetJsonData(this Bradesco bank)
     {
       return JsonData;
     }
