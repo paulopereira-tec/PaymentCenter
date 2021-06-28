@@ -1,7 +1,5 @@
 # Descrição
-O objetivo desse projeto é prover uma única API de integração entre sua aplicação e diversas plataformas de pagamento de forma que a integração seja uniforme e fácil de implementar.
-
-Atualmente, está integrado com as seguintes plataformas:
+O objetivo desse projeto é prover uma única API de integração entre sua aplicação e diversas plataformas de pagamento de forma que a integração seja uniforme e fácil de implementar. Atualmente, está integrado com as seguintes plataformas:
 - Boletos do banco Bradesco.
 
 # Exemplo de utilização
