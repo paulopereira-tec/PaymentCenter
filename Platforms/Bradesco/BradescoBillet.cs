@@ -33,7 +33,7 @@ namespace PaymentCenter.Platforms.Bradesco
     /// <param name="specieTitleCode"></param>
     /// <param name="IOF">Valor de imposto a ser pago.</param>
     /// <returns></returns>
-    public static Bradesco Prepare(this Bradesco bradesco, string operationType, string specieTitleCode, string IOF)
+    public static Bradesco PrepareBillet(this Bradesco bradesco, string operationType, string specieTitleCode, string IOF)
     {
       #region Variáveis a serem utilizadas na implementação
       string cdEspecieTitulo, vlIOF, vlNominalTitulo, cdIndCpfcnpjPagador, nuCpfcnpjPagador, cepPagador, complementoCepPagador, idProduto, nuNegociacao, filialCPFCNPJ, ctrlCPFCNPJ, nuCliente,

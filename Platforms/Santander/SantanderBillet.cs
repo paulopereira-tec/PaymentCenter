@@ -10,40 +10,61 @@ namespace PaymentCenter.Platforms.Santander
 {
   public static class SantanderBillet
   {
-    public static string JsonData { get; private set; }
+    #region Propriedades privadas
+    /// <summary>
+    /// Determina se a atividade atual é de geração ou consulta de boletos.
+    /// </summary>
+    private static EGenerateOrConsult YouLikeGenerateOrConsultBillet { get; set; }
 
-    public static string XmlData { get; private set; }
+    /// <summary>
+    /// URL indicada pelo banco para gerar o ticket de autenticação
+    /// </summary>
+    private static string _dlbTicketURL = "https://ymbdlb.santander.com.br/dl-ticket-services/TicketEndpointService";
+
+    /// <summary>
+    /// URL indicada pelo banco para gerar ou consultar boleto.
+    /// </summary>
+    private static string _ymbCobrancaURL = "https://ymbcash.santander.com.br/ymbsrv/CobrancaV3EndpointService";
 
     /// <summary>
     /// Instancia da classe contendo o certificado digital (e-CPF ou e-CNPJ)
     /// </summary>
     private static Certificate _certificate;
+    #endregion
+
+    #region Propriedades públicas
+    /// <summary>
+    /// Retorna o conteúdo obtido pelo banco convertido de XML para o formato JSON
+    /// </summary>
+    public static string JsonData { get; private set; }
 
     /// <summary>
-    /// Adiciona um certificado digital (e-CPF ou e-CNPJ) a ser utilizado.
+    /// Retorna o conteúdo obtido no banco no formato XML.
     /// </summary>
-    /// <param name="bank"></param>
-    /// <param name="path"></param>
-    /// <param name="password"></param>
+    public static string XmlData { get; private set; }
+
+    /// <summary>
+    /// Ticket de autenticação gerado para consultar ou gerar boletos.
+    /// </summary>
+    public static string XmlTicket { get; set; }
+
+    /// <summary>
+    /// XML criado para receber o ticket gerado pelo banco
+    /// </summary>
+    public static string XmlCallTicket { get; set; }
+    #endregion
+
+    #region Métodos privados
+    /// <summary>
+    /// Recupera o ticket de segurança para gerar ou consultar boletos
+    /// </summary>
     /// <returns></returns>
-    public static Santander AddCertificate(this Santander bank, string path, string password)
+    private static string receiveTicket()
     {
-      _certificate = new Certificate(path, password);
-
-      return bank;
-    }
-
-
-    /// <summary>
-    /// Inicia a execução da tarefa, seja ela geração ou consulta do boleto.
-    /// </summary>
-    /// <param name="santander"></param>
-    public static string Execute(this Santander bank)
-    {
-      HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://ymbdlb.santander.com.br/dl-ticket-services/TicketEndpointService");
+      HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_ymbCobrancaURL);
       request.ClientCertificates.Add(_certificate.x509);
       byte[] bytes;
-      bytes = System.Text.Encoding.ASCII.GetBytes(XmlData);
+      bytes = System.Text.Encoding.ASCII.GetBytes(XmlCallTicket);
       request.ContentType = "text/xml; encoding='utf-8'";
       request.ContentLength = bytes.Length;
       request.Method = "POST";
@@ -56,17 +77,74 @@ namespace PaymentCenter.Platforms.Santander
       {
         Stream responseStream = response.GetResponseStream();
         string responseStr = new StreamReader(responseStream).ReadToEnd();
+        XmlCallTicket = responseStr;
         return responseStr;
       }
       return null;
     }
-  
-  /// <summary>
-  /// Inicia a preparação dos dados para geração do boleto bancário.
-  /// </summary>
-  /// <param name="bank"></param>
-  /// <returns></returns>
-  public static Santander Prepare(this Santander bank) {
+
+    /// <summary>
+    /// Executa o serviço para consulta ou geração de boletos
+    /// </summary>
+    /// <returns></returns>
+    private static string runServiceToBilletGenerate()
+    {
+      HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_dlbTicketURL);
+      request.ClientCertificates.Add(_certificate.x509);
+      byte[] bytes;
+      bytes = System.Text.Encoding.ASCII.GetBytes(XmlTicket);
+      request.ContentType = "text/xml; encoding='utf-8'";
+      request.ContentLength = bytes.Length;
+      request.Method = "POST";
+      Stream requestStream = request.GetRequestStream();
+      requestStream.Write(bytes, 0, bytes.Length);
+      requestStream.Close();
+      HttpWebResponse response;
+      response = (HttpWebResponse)request.GetResponse();
+      if (response.StatusCode == HttpStatusCode.OK)
+      {
+        Stream responseStream = response.GetResponseStream();
+        string responseStr = new StreamReader(responseStream).ReadToEnd();
+        XmlCallTicket = responseStr;
+        return responseStr;
+      }
+      return null;
+    }
+    #endregion
+
+    #region Métodos públicos
+    /// <summary>
+    /// Adiciona um certificado digital x509 conforme características indicadas pelo banco a ser utilizado.
+    /// </summary>
+    /// <param name="bank"></param>
+    /// <param name="path"></param>
+    /// <param name="password"></param>
+    /// <returns></returns>
+    public static Santander AddCertificate(this Santander bank, string path, string password)
+    {
+      _certificate = new Certificate(path, password);
+      return bank;
+    }
+
+    /// <summary>
+    /// Inicia a execução da tarefa, seja ela geração ou consulta do boleto.
+    /// </summary>
+    /// <param name="santander"></param>
+    public static string Execute(this Santander bank)
+    {
+      if (receiveTicket() is null) return null;
+
+      return runServiceToBilletGenerate();
+    }
+
+    /// <summary>
+    /// Inicia a preparação dos dados para geração do boleto bancário.
+    /// </summary>
+    /// <param name="bank"></param>
+    /// <returns></returns>
+    public static Santander PrepareBillet(this Santander bank)
+    {
+      YouLikeGenerateOrConsultBillet = EGenerateOrConsult.Generate;
 
       #region Recupera o endereço de cobrança
       IAddress address = bank.Payer.Addresses.Where(x => x.Type == EAddressType.Charge).FirstOrDefault();
@@ -78,10 +156,10 @@ namespace PaymentCenter.Platforms.Santander
       tickets.Add("CONVENIO.COD-BANCO", "");
       tickets.Add("CONVENIO.COD-CONVENIO", "");
 
-      tickets.Add("PAGADOR.TP-DOC", (bank.Payer.Personality == EPersonalitty.PF? "CPF": "CNPJ"));
+      tickets.Add("PAGADOR.TP-DOC", (bank.Payer.Personality == EPersonalitty.PF ? "CPF" : "CNPJ"));
       tickets.Add("PAGADOR.NUM-DOC", bank.Payer.Document.DocumentSubscription);
       tickets.Add("PAGADOR.NOME", bank.Payer.Name.FullName);
-      
+
       tickets.Add("PAGADOR.ENDER", address.Street);
       tickets.Add("PAGADOR.BAIRRO", address.Neigborhood);
       tickets.Add("PAGADOR.CIDADE", address.City);
@@ -127,30 +205,41 @@ namespace PaymentCenter.Platforms.Santander
       #endregion
 
       #region Prepara o XML para recuperar ticket
-      XmlData = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:impl=\"http://impl.webservice.dl.app.bsbr.altec.com/\">";
-      XmlData += "<soapenv:Header/>";
-      XmlData += "<soapenv:Body>";
-      XmlData += "<impl:create>";
-      XmlData += "<TicketRequest>";
+      XmlCallTicket = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:impl=\"http://impl.webservice.dl.app.bsbr.altec.com/\">";
+      XmlCallTicket += "<soapenv:Header/>";
+      XmlCallTicket += "<soapenv:Body>";
+      XmlCallTicket += "<impl:create>";
+      XmlCallTicket += "<TicketRequest>";
 
-      XmlData += "<dados>";
-      foreach(var ticket in tickets)
+      XmlCallTicket += "<dados>";
+      foreach (var ticket in tickets)
       {
-        XmlData += "<key>" + ticket.Key + "</key>";
-        XmlData += "<value>" + ticket.Value + "</value>";
+        XmlCallTicket += "<key>" + ticket.Key + "</key>";
+        XmlCallTicket += "<value>" + ticket.Value + "</value>";
       }
-      XmlData += "</dados>";
+      XmlCallTicket += "</dados>";
 
-      XmlData += "<expiracao>100</expiracao>";
-      XmlData += "<sistema>YMB</sistema>";
-      XmlData += "</TicketRequest>";
-      XmlData += "</impl:create>";
-      XmlData += "</soapenv:Body>";
-      XmlData += "</soapenv:Envelope>";
+      XmlCallTicket += "<expiracao>100</expiracao>";
+      XmlCallTicket += "<sistema>YMB</sistema>";
+      XmlCallTicket += "</TicketRequest>";
+      XmlCallTicket += "</impl:create>";
+      XmlCallTicket += "</soapenv:Body>";
+      XmlCallTicket += "</soapenv:Envelope>";
       #endregion
 
       return bank;
     }
 
+    /// <summary>
+    /// Executa a consulta de boletos gerados
+    /// </summary>
+    /// <param name="bank"></param>
+    public static Santander PrepareConsult(this Santander bank)
+    {
+      YouLikeGenerateOrConsultBillet = EGenerateOrConsult.Consult;
+
+      return bank;
+    }
+    #endregion
   }
 }
